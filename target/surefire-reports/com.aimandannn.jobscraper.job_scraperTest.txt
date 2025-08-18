@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.aimandannn.jobscraper.job_scraperTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 176.9 s -- in com.aimandannn.jobscraper.job_scraperTest
