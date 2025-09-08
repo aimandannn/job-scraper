@@ -37,7 +37,8 @@ public class JobInput
 
         if (userInput == null || userInput.trim().isEmpty()) 
         {
-            userInput = "Software QA Engineer";
+            // userInput = "Software QA Engineer";
+            userInput = "part time kuala lumpur";
         } 
 
         return userInput;

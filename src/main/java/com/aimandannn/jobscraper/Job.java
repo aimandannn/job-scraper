@@ -9,8 +9,9 @@ public class Job
     private String description;
     private String datePosted;
     private String jobLink;
+    private String quickApply;
 
-    public Job(String title, String companyName, String location, String salary, String description, String datePosted, String jobLink)
+    public Job(String title, String companyName, String location, String salary, String description, String datePosted, String jobLink, String quickApply)
     {
         this.title = title;
         this.companyName = companyName;
@@ -19,6 +20,7 @@ public class Job
         this.description = description;
         this.datePosted = datePosted;
         this.jobLink = jobLink;
+        this.quickApply = quickApply;
     }
 
     public String getTitle()
@@ -54,5 +56,10 @@ public class Job
     public String getJobLink()
     {
         return jobLink;
+    }
+
+    public String getQuickApply()
+    {
+        return quickApply;
     }
 }

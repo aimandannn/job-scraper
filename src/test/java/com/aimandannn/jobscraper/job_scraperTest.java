@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -28,6 +29,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.Alert;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -36,7 +38,7 @@ import java.awt.event.ActionListener;
 import com.aimandannn.jobscraper.JobInput;
 import com.aimandannn.jobscraper.JobLogin;
 import com.aimandannn.jobscraper.JobSearch;
-import com.aimandannn.jobscraper.Job;
+import com.aimandannn.jobscraper.JobExtractor;
 
 public class job_scraperTest 
 {
@@ -64,28 +66,95 @@ public class job_scraperTest
     {
         driver.get("https://my.jobstreet.com/");
 
-        // JobLogin jobLogin = new JobLogin();
+        JobLogin jobLogin = new JobLogin();
         JobInput jobInput = new JobInput();
         JobSearch jobSearch = new JobSearch();
+        JobExtractor jobExtractor = new JobExtractor(driver);
 
-        // jobLogin.login_job(driver);
+        jobLogin.login_job(driver);
 
         String userInput = jobInput.input_job(driver);
         int totalJob = jobSearch.search_job(driver, userInput);
 
         System.out.println(totalJob + " available related to this position.");
+
+        List<Map<String, String>> allJobsLinks = new ArrayList<>();
+        List<Job> allJobs = new ArrayList<>();
+        Map<Job> filteredJobs = new HashMap<>();
+        JobFilter jobFilter = new JobFilter(driver);
         
-        List<Job> JobList = new ArrayList<>();
+        int jobPage = 1;
 
-        Job newJob = new Job("Software Developer", "ADL", "Kuala Lumpur", "RM5500", "A good job.", "5 days ago.");
+        // do
+        // {
+        //     wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("[data-automation='job-list-view-job-link']")));
+            
+        //     List<WebElement> jobCards = driver.findElements(By.cssSelector("[data-automation='job-list-view-job-link']"));
         
-        JobList.add(newJob);
+        //     for (WebElement jobCard : jobCards) 
+        //     {
+        //         String link = jobCard.getAttribute("href");
+        //         Map<String, String> jobDetailsMap = new HashMap<>();
 
-        Job job1 = JobList.get(0);
+        //         jobDetailsMap.put("jobLink", link);
+        //         allJobsLinks.add(jobDetailsMap);
+        //     }
 
-        System.out.println(job1.getTitle());
-        System.out.println(job1.getSalary());
+        //     try
+        //     {
+        //         By nextButton = By.cssSelector("a[aria-label='Next']");
+        //         WebElement nextBtn = wait.until(ExpectedConditions.elementToBeClickable(nextButton));
+
+        //         nextBtn.click();
+                
+        //         jobPage++;
+        //     }
+        //     catch(Exception e)
+        //     {
+        //         System.out.println("Total Page Retrieved: " + jobPage + ".");
+        //         break;
+        //     }
+
+        // }while(true);
+
+        // for(int a=0; a<allJobsLinks.size(); a++)
+        // {
+        //     Map<String, String> currentJobLink = allJobsLinks.get(a);
+        //     String jobLink = currentJobLink.get("jobLink");
+
+        //     Job currentJob = jobExtractor.extractJobDetails(jobLink);
+        //     allJobs.add(currentJob);
+        // }
+
+        //To debug if any job retrieval failed from specific link.
+
+        Job currentJob = jobExtractor.extractJobDetails("https://my.jobstreet.com/job/86710396?type=standard&ref=search-standalone#sol=5b750115d4231830a25bb169091e9ef18fd66023");
+        allJobs.add(currentJob);
+
+        Job secondJob = allJobs.get(0);
+        System.out.println("Job Title: " + secondJob.getTitle());
+        System.out.println("Job Company: " + secondJob.getCompanyName());
+        System.out.println("Job Salary: " + secondJob.getSalary());
+        System.out.println("Job Location: " + secondJob.getLocation());
+        System.out.println("Job Description: " + secondJob.getDescription());
+        System.out.println("Date Posted: " + secondJob.getDatePosted());
+        System.out.println("Job Link: " + secondJob.getJobLink());
+        System.out.println("Quick Apply: " + secondJob.getQuickApply());
+
+        //Filter the jobs retrieved based on conditions configured.
+
+        for (Job job : allJobs) 
+        {
+            Job filteredJob = jobFilter.filterJob(job.getJobLink());
+        }
+
+
+
+
+        
+        
     }
+
 
 
 
