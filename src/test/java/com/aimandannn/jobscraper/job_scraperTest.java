@@ -39,6 +39,7 @@ import com.aimandannn.jobscraper.JobInput;
 import com.aimandannn.jobscraper.JobLogin;
 import com.aimandannn.jobscraper.JobSearch;
 import com.aimandannn.jobscraper.JobExtractor;
+import com.aimandannn.jobscraper.JobFilter;
 
 public class job_scraperTest 
 {
@@ -66,12 +67,12 @@ public class job_scraperTest
     {
         driver.get("https://my.jobstreet.com/");
 
-        JobLogin jobLogin = new JobLogin();
+        // JobLogin jobLogin = new JobLogin();
         JobInput jobInput = new JobInput();
         JobSearch jobSearch = new JobSearch();
         JobExtractor jobExtractor = new JobExtractor(driver);
 
-        jobLogin.login_job(driver);
+        // jobLogin.login_job(driver);
 
         String userInput = jobInput.input_job(driver);
         int totalJob = jobSearch.search_job(driver, userInput);
@@ -80,7 +81,7 @@ public class job_scraperTest
 
         List<Map<String, String>> allJobsLinks = new ArrayList<>();
         List<Job> allJobs = new ArrayList<>();
-        Map<Job> filteredJobs = new HashMap<>();
+        Map<String, Job> filteredJobsMap = new HashMap<>();
         JobFilter jobFilter = new JobFilter(driver);
         
         int jobPage = 1;
@@ -131,6 +132,9 @@ public class job_scraperTest
         Job currentJob = jobExtractor.extractJobDetails("https://my.jobstreet.com/job/86710396?type=standard&ref=search-standalone#sol=5b750115d4231830a25bb169091e9ef18fd66023");
         allJobs.add(currentJob);
 
+        Job currentJob1 = jobExtractor.extractJobDetails("https://my.jobstreet.com/job/86414820?type=standard&ref=search-standalone#sol=16618f8ca01d8534e5e740d4e0ba60d29a5f5993");
+        allJobs.add(currentJob1);
+
         Job secondJob = allJobs.get(0);
         System.out.println("Job Title: " + secondJob.getTitle());
         System.out.println("Job Company: " + secondJob.getCompanyName());
@@ -145,8 +149,12 @@ public class job_scraperTest
 
         for (Job job : allJobs) 
         {
-            Job filteredJob = jobFilter.filterJob(job.getJobLink());
+            Job filteredJob = jobFilter.filterJob(job);
+            filteredJobsMap.put(filteredJob.getJobLink(), filteredJob);
         }
+
+        Job checkJob = filteredJobsMap.get("https://my.jobstreet.com/job/86414820?type=standard&ref=search-standalone#sol=16618f8ca01d8534e5e740d4e0ba60d29a5f5993");
+        System.out.println("Job Title 2 - " + checkJob.getTitle());
 
 
 
